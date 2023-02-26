@@ -18,6 +18,7 @@ namespace CPU {
             array<uint8_t, 16> varReg;              // Varibal Register; VF is flag register
 
             bool loadRom(string path);              // Load rom into memory;
+            void chip8::loadFont();                 // Load font into memory;
 
     };
 }
