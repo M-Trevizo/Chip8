@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <stdint.h>
+#include <array>
 #include "../include/chip8.h"
 
 using namespace std;
@@ -18,7 +19,6 @@ void chip8::loadRom(string path) {
 
     filebuf *pBuf = stream.rdbuf();
 
-    //TODO: Fix the loading of the rom.
     int memIndex = 0x200;
     while(pBuf->sgetc() != EOF) {
         uint8_t byte;
@@ -64,10 +64,40 @@ void chip8::loadFont() {
 }
 
 uint16_t chip8::fetch() {
+
     uint8_t highByte = mem[PC];
     PC++;
     uint8_t lowByte = mem[PC];
     PC++;
     uint16_t opCode = (highByte << 8) | lowByte;
     return opCode;
+
+}
+
+array<uint8_t, 4> chip8::decode(uint16_t opCode) {
+
+    uint8_t nibble1;
+    uint8_t nibble2;
+    uint8_t nibble3;
+    uint8_t nibble4;
+
+    uint16_t mask1 = 0xF000;
+    uint16_t mask2 = 0x0F00;
+    uint16_t mask3 = 0x00F0;
+    uint16_t mask4 = 0x000F;
+
+    nibble1 = opCode & mask1;
+    nibble2 = opCode & mask2;
+    nibble3 = opCode & mask3;
+    nibble4 = opCode & mask4;
+
+    array<uint8_t, 4> nibbles = {
+        nibble1,
+        nibble2,
+        nibble3,
+        nibble4
+    };
+
+    return nibbles;
+
 }
