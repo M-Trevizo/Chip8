@@ -19,7 +19,7 @@ namespace CPU {
             bool romLoaded = false;                 // Is rom loaded into mem
 
             void loadRom(string path);              // Load rom into memory;
-            void chip8::loadFont();                 // Load font into memory;
+            void loadFont();                        // Load font into memory;
 
     };
 }
