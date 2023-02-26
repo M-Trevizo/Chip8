@@ -14,15 +14,5 @@ int main(int argc, char** argv) {
     }
 
     string path = argv[1];
-    ifstream stream;
-    stream.open(path, ios::binary);
-
-    if(!stream.is_open()) {
-        cout << "Unable to open file." << endl;
-        return 1;
-    }
-    
-
-    stream.close();
     
 }
