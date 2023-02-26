@@ -13,13 +13,19 @@ void chip8::loadRom(string path) {
 
     if(!stream.is_open()) {
         cout << "Unable to open file." << endl;
+        return;
     }
 
+    filebuf *pBuf = stream.rdbuf();
+
+    //TODO: Fix the loading of the rom.
     int memIndex = 0x200;
-    while(!stream.eof()) {
-        mem[memIndex] = stream.get();
-        memIndex++;
-        mem[memIndex] = stream.get();
+    while(pBuf->sgetc() != EOF) {
+        uint8_t byte;
+        uint8_t highNibble = pBuf->sbumpc();
+        uint8_t lowNibble = pBuf->sbumpc();
+        byte = (highNibble << 4) | lowNibble;
+        mem[memIndex] = byte;
         memIndex++;
     }
 
@@ -30,7 +36,7 @@ void chip8::loadRom(string path) {
 
 void chip8::loadFont() {
 
-    uint8_t font[] = {
+    int font[] = {
         0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
         0x20, 0x60, 0x20, 0x20, 0x70, // 1
         0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
