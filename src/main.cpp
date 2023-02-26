@@ -15,6 +15,11 @@ int main(int argc, char** argv) {
 
     string path = argv[1];
 
+    if(path.find(".ch8") == -1) {
+        cout << "Rom must have file extension .ch8" << endl;
+        return 1;
+    }
+
     chip8 chip;
     chip.loadFont();
     chip.loadRom(path);
