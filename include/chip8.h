@@ -9,18 +9,18 @@ namespace CPU {
     class chip8 {
 
         public:
-            array<uint8_t, 4096> mem = {};               // Memory 4kB RAM
-            uint8_t PC = 0;                             // Program Counter
+            array<uint8_t, 4096> mem = {};              // Memory 4kB RAM
+            uint8_t PC = 0x200;                         // Program Counter
             uint16_t I = 0;                             // Index Register
-            stack<uint16_t> stack = {};                  // Stack
+            stack<uint16_t> stack = {};                 // Stack
             uint8_t DT = 0;                             // Delay Timer
             uint8_t ST = 0;                             // Sound Timer
-            array<uint8_t, 16> varReg = {};              // Varibal Register; VF is flag register
-            bool romLoaded = false;                 // Is rom loaded into mem
+            array<uint8_t, 16> varReg = {};             // Varibal Register; VF is flag register
+            bool romLoaded = false;                     // Is rom loaded into mem
 
 
-            void loadRom(string path);              // Load rom into memory;
-            void loadFont();                        // Load font into memory;
-
+            void loadRom(string path);                  // Load rom into memory
+            void loadFont();                            // Load font into memory
+            uint16_t fetch();                           // Fetch Opcode
     };
 }

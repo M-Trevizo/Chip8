@@ -62,3 +62,12 @@ void chip8::loadFont() {
     }
 
 }
+
+uint16_t chip8::fetch() {
+    uint8_t highByte = mem[PC];
+    PC++;
+    uint8_t lowByte = mem[PC];
+    PC++;
+    uint16_t opCode = (highByte << 8) | lowByte;
+    return opCode;
+}
