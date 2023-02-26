@@ -8,8 +8,8 @@ using namespace CPU;
 int main(int argc, char** argv) {
 
     // Check arguments for single filepath
-    if(argc > 2) {
-        cout << "Too many arguments given." << endl;
+    if(argc != 2) {
+        cout << "Must give one argument containing rom filepath." << endl;
         return 1;
     }
 
