@@ -17,5 +17,7 @@ namespace CPU {
             uint8_t ST;                             // Sound Timer
             array<uint8_t, 16> varReg;              // Varibal Register; VF is flag register
 
+            bool loadRom(string path);              // Load rom into memory;
+
     };
 }
