@@ -6,9 +6,8 @@
 using namespace std;
 using namespace CPU;
 
-bool chip8::loadRom(string path) {
+void chip8::loadRom(string path) {
 
-    bool success = false;
     ifstream stream;
     stream.open(path, ios::binary);
 
@@ -16,12 +15,16 @@ bool chip8::loadRom(string path) {
         cout << "Unable to open file." << endl;
     }
 
-    /*
-    TODO: Enter rom into memory
-    */
+    int memIndex = 0x200;
+    while(!stream.eof()) {
+        mem[memIndex] = stream.get();
+        memIndex++;
+        mem[memIndex] = stream.get();
+        memIndex++;
+    }
 
     stream.close();
-    return success;
+    romLoaded = true;
 
 }
 
@@ -46,7 +49,7 @@ void chip8::loadFont() {
         0xF0, 0x80, 0xF0, 0x80, 0x80  // F
     };
 
-    uint8_t memIndex = 0x50;
+    int memIndex = 0x050;
     for(int i = 0; i < 80; i++) {
         mem[memIndex] = font[i];
         memIndex++;
