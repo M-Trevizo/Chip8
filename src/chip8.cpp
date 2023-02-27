@@ -124,6 +124,12 @@ void chip8::execute(array<uint8_t, 4> nibbles) {
 }
 
 void chip8::clearScreen() {
+    
+    for(int i = 0; i < 32; i++) {
+        for(int j = 0; j < 64; j++) {
+            display[i][j] = 0;
+        }
+    }
 
 }
 
@@ -131,5 +137,5 @@ void chip8::jump(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
 
     uint16_t newAddress = (nibble1 << 8) | (nibble2 << 4) | nibble3;
     PC = newAddress;
-    
+
 }
