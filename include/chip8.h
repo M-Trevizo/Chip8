@@ -19,9 +19,13 @@ namespace CPU {
             bool romLoaded = false;                     // Is rom loaded into mem
 
 
-            void loadRom(string path);                              // Load rom into memory
-            void loadFont();                                        // Load font into memory
-            uint16_t fetch();                                       // Fetch Opcode
-            array<uint8_t, 4> chip8::decode(uint16_t opCode)        // Decode Opcode
+            void loadRom(string path);                  // Load rom into memory
+            void loadFont();                            // Load font into memory
+            uint16_t fetch();                           // Fetch Opcode
+            array<uint8_t, 4> decode(uint16_t opCode);  // Decode Opcode
+            void execute(array<uint8_t, 4> nibbles);    // Function to call execution function
+
+            void clearScreen();                                             // 00E0
+            void jump(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3);   // 1NNN
     };
 }

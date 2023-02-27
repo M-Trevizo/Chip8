@@ -101,3 +101,35 @@ array<uint8_t, 4> chip8::decode(uint16_t opCode) {
     return nibbles;
 
 }
+
+void chip8::execute(array<uint8_t, 4> nibbles) {
+    
+    uint8_t nibble1 = nibbles[0];
+    uint8_t nibble2 = nibbles[1];
+    uint8_t nibble3 = nibbles[2];
+    uint8_t nibble4 = nibbles[3];
+
+    switch(nibble1) {
+
+        case 0x0:
+            switch(nibble4) {
+                case 0x0: clearScreen();
+                break;
+            }
+        break;
+        case 0x1: ;
+        break;
+    }
+
+}
+
+void chip8::clearScreen() {
+
+}
+
+void chip8::jump(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
+
+    uint16_t newAddress = (nibble1 << 8) | (nibble2 << 4) | nibble3;
+    PC = newAddress;
+    
+}
