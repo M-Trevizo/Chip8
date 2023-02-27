@@ -16,6 +16,7 @@ namespace CPU {
             uint8_t DT = 0;                             // Delay Timer
             uint8_t ST = 0;                             // Sound Timer
             array<uint8_t, 16> varReg = {};             // Varibal Register; VF is flag register
+            int[32][64] display = {};                   // Display grid
             bool romLoaded = false;                     // Is rom loaded into mem
 
 
