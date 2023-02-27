@@ -2,12 +2,12 @@
 #include <fstream>
 #include <stdint.h>
 #include <array>
-#include "../include/chip8.h"
+#include "../include/Chip8.h"
 
 using namespace std;
 using namespace CPU;
 
-void chip8::loadRom(string path) {
+void Chip8::loadRom(string path) {
 
     ifstream stream;
     stream.open(path, ios::binary);
@@ -34,7 +34,7 @@ void chip8::loadRom(string path) {
 
 }
 
-void chip8::loadFont() {
+void Chip8::loadFont() {
 
     int font[] = {
         0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
@@ -63,7 +63,7 @@ void chip8::loadFont() {
 
 }
 
-uint16_t chip8::fetch() {
+uint16_t Chip8::fetch() {
 
     uint8_t highByte = mem[PC];
     PC++;
@@ -74,7 +74,7 @@ uint16_t chip8::fetch() {
 
 }
 
-array<uint8_t, 4> chip8::decode(uint16_t opCode) {
+array<uint8_t, 4> Chip8::decode(uint16_t opCode) {
 
     uint8_t nibble1;
     uint8_t nibble2;
@@ -102,7 +102,7 @@ array<uint8_t, 4> chip8::decode(uint16_t opCode) {
 
 }
 
-void chip8::execute(array<uint8_t, 4> nibbles) {
+void Chip8::execute(array<uint8_t, 4> nibbles) {
     
     uint8_t nibble1 = nibbles[0];
     uint8_t nibble2 = nibbles[1];
@@ -132,7 +132,7 @@ void chip8::execute(array<uint8_t, 4> nibbles) {
 }
 
 // 00E0
-void chip8::clearScreen() {
+void Chip8::clearScreen() {
     
     for(int i = 0; i < 32; i++) {
         for(int j = 0; j < 64; j++) {
@@ -143,7 +143,7 @@ void chip8::clearScreen() {
 }
 
 // 1NNN
-void chip8::jump(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
+void Chip8::jump(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
 
     uint16_t newAddress = (nibble1 << 8) | (nibble2 << 4) | nibble3;
     PC = newAddress;
@@ -151,7 +151,7 @@ void chip8::jump(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
 }
 
 // 6XNN
-void chip8::setRegister(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
+void Chip8::setRegister(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
 
     uint8_t byte = (nibble2 << 4) | nibble3;
     varReg[nibble1] = byte;
@@ -159,7 +159,7 @@ void chip8::setRegister(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
 }
 
 // 7XNN
-void chip8::add(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
+void Chip8::add(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
 
     uint8_t byte = (nibble2 << 4) | nibble3;
     varReg[nibble1] += byte;
@@ -167,7 +167,7 @@ void chip8::add(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
 }
 
 // ANNN
-void chip8::setIndex(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
+void Chip8::setIndex(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
 
     uint16_t address = (nibble1 << 8) | (nibble2 << 4) | nibble3;
     I = address;
@@ -175,7 +175,7 @@ void chip8::setIndex(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
 }
 
 // DXYN
-void chip8::draw(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
+void Chip8::draw(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
 
     // TODO: Finish writing this function
 

@@ -6,7 +6,7 @@ using namespace std;
 
 namespace CPU {
 
-    class chip8 {
+    class Chip8 {
 
         public:
             array<uint8_t, 4096> mem = {};              // Memory 4kB RAM
