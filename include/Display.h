@@ -13,7 +13,7 @@ namespace Graphics {
             SDL_Event event;
 
             void initGraphics();
-
+            void quitGraphics();
 
     };
 }
