@@ -119,6 +119,14 @@ void chip8::execute(array<uint8_t, 4> nibbles) {
         break;
         case 0x1: jump(nibble2, nibble3, nibble4);
         break;
+        case 0x6: setRegister(nibble2, nibble3, nibble4);
+        break;
+        case 0x7: add(nibble2, nibble3, nibble4);
+        break;
+        case 0xA: setIndex(nibble2, nibble3, nibble4);
+        break;
+        case 0xD: draw(nibble2, nibble3, nibble4);
+        break;
     }
 
 }
