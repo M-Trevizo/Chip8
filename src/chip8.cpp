@@ -117,12 +117,13 @@ void chip8::execute(array<uint8_t, 4> nibbles) {
                 break;
             }
         break;
-        case 0x1: ;
+        case 0x1: jump(nibble2, nibble3, nibble4);
         break;
     }
 
 }
 
+// 00E0
 void chip8::clearScreen() {
     
     for(int i = 0; i < 32; i++) {
@@ -133,9 +134,41 @@ void chip8::clearScreen() {
 
 }
 
+// 1NNN
 void chip8::jump(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
 
     uint16_t newAddress = (nibble1 << 8) | (nibble2 << 4) | nibble3;
     PC = newAddress;
+
+}
+
+// 6XNN
+void chip8::setRegister(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
+
+    uint8_t byte = (nibble2 << 4) | nibble3;
+    varReg[nibble1] = byte;
+
+}
+
+// 7XNN
+void chip8::add(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
+
+    uint8_t byte = (nibble2 << 4) | nibble3;
+    varReg[nibble1] += byte;
+
+}
+
+// ANNN
+void chip8::setIndex(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
+
+    uint16_t address = (nibble1 << 8) | (nibble2 << 4) | nibble3;
+    I = address;
+
+}
+
+// DXYN
+void chip8::draw(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
+
+    // TODO: Finish writing this function
 
 }

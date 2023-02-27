@@ -25,7 +25,11 @@ namespace CPU {
             array<uint8_t, 4> decode(uint16_t opCode);  // Decode Opcode
             void execute(array<uint8_t, 4> nibbles);    // Function to call execution function
 
-            void clearScreen();                                             // 00E0
-            void jump(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3);   // 1NNN
+            void clearScreen();                                                     // 00E0
+            void jump(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3);           // 1NNN
+            void setRegister(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3);    // 6XNN
+            void add(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3);            // 7XNN 
+            void setIndex(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3);       // ANNN
+            void draw(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3);           // DXYN
     };
 }
