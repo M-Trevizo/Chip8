@@ -13,6 +13,7 @@ void Display::initGraphics() {
     }
 
     renderer = SDL_CreateRenderer(window, -1, 0);
+    SDL_RenderSetLogicalSize(renderer, 64, 32);
 
 }
 

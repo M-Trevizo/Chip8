@@ -6,14 +6,16 @@ namespace Graphics {
 
         public:
 
-            const int WIDTH = 512;
-            const int HEIGHT = 256;
+            const int WIDTH = 640;
+            const int HEIGHT = 480;
             SDL_Renderer *renderer;
             SDL_Window *window;
             SDL_Event event;
+            SDL_Rect rects[]
 
             void initGraphics();
             void quitGraphics();
+            
 
     };
 }
