@@ -1,5 +1,6 @@
 #include <iostream>
 #include <display.h>
+#include <Chip8.h>
 
 using namespace Graphics;
 
@@ -29,4 +30,31 @@ void Display::quitGraphics() {
 
     SDL_Quit();
     
+}
+
+void Display::createPointsVector(Chip8 chip) {
+
+    for(int height = 0; height < 32, height++) {
+        for(int width = 0; width < 64; width++) {
+            if(chip.display[height][width] == 1) {
+                SDL_Point point = {width, height};
+                pointsVector.push_back(point);
+            }
+        }
+    }
+    
+}
+
+void Display::drawVector(vector vector) {
+
+    SDL_Point pointsArray[vector.size()];
+    for(int i = 0; i < vector.size(); i++) {
+        pointsArray[i] = vector[i];
+    }
+
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderClear(renderer);
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_RenderDrawPoints(renderer, pointsArray, vector.size());
+
 }

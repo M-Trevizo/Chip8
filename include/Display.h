@@ -1,4 +1,8 @@
+#include <vector>
 #include <SDL.h>
+#include "Chip8.h"
+
+using namespace std;
 
 namespace Graphics {
 
@@ -11,11 +15,12 @@ namespace Graphics {
             SDL_Renderer *renderer;
             SDL_Window *window;
             SDL_Event event;
-            SDL_Rect rects[]
+            vector<SDL_Point> pointsVector;
 
             void initGraphics();
             void quitGraphics();
-            
+            void createPointsVector(Chip8 chip);
+            void drawVector(vector vector);
 
     };
 }
