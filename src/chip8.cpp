@@ -178,5 +178,28 @@ void Chip8::setIndex(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
 void Chip8::draw(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
 
     // TODO: Finish writing this function
+    // Create array representing display state
+    // Pass that array to SDL to create a copy with Rectangles
+    uint16_t bytePointer = I;
+    uint8_t bytesLeft = nibble3;
+    uint8_t YLocation = nibble2 % 32;
+
+    while(bytesLeft > 0) {
+
+        uint8_t byteToDraw = mem[bytePointer];
+        uint8_t XLocation = nibble1 % 64;
+        uint8_t mask = 0xF0;
+
+        while(mask > 0) {
+            uint8_t bitToEnter = mask & byteToDraw;
+            display[YLocation][XLocation] ^= bitToEnter;
+            mask >> 1;
+            XLocation++;
+        }
+
+        YLocation++;
+        bytePointer++;
+        bytesLeft--;
+    }
 
 }
