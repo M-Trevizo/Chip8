@@ -1,7 +1,7 @@
 #include <array>
 #include <stdint.h>
 #include <stack>
-#include <Display.h>
+#include "./Display.h"
 
 using namespace std;
 using namespace Graphics;
@@ -12,7 +12,7 @@ namespace CPU {
 
         public:
             array<uint8_t, 4096> mem = {};              // Memory 4kB RAM
-            uint8_t PC = 0x200;                         // Program Counter
+            uint16_t PC = 0x200;                         // Program Counter
             uint16_t I = 0;                             // Index Register
             stack<uint16_t> stack = {};                 // Stack
             uint8_t DT = 0;                             // Delay Timer

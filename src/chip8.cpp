@@ -2,8 +2,8 @@
 #include <fstream>
 #include <stdint.h>
 #include <array>
-#include <Chip8.h>
-#include <Display.h>
+#include "../include/Chip8.h"
+//#include "../include/Display.h"
 
 using namespace std;
 using namespace CPU;
@@ -192,7 +192,7 @@ void Chip8::draw(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
 
         while(mask > 0) {
             uint8_t bitToEnter = mask & byteToDraw;
-            display[YLocation][XLocation] ^= bitToEnter;
+            display.displayState[YLocation][XLocation] ^= bitToEnter;
             mask >> 1;
             XLocation++;
         }

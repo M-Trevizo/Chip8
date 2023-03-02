@@ -1,9 +1,7 @@
 #include <vector>
 #include <SDL.h>
-//#include <Chip8.h>
 
 using namespace std;
-using namespace CPU;
 
 namespace Graphics {
 
@@ -17,12 +15,12 @@ namespace Graphics {
             SDL_Window *window;
             SDL_Event event;
             vector<SDL_Point> pointsVector;
-            static int displayState[32][64] = {};
+            int displayState[32][64] = {};
 
             void initGraphics();
             void quitGraphics();
             void createPointsVector();
-            void drawVector(vector vector);
+            void drawVector();
 
     };
 }
