@@ -1,6 +1,6 @@
 #include <iostream>
-#include <display.h>
-#include <Chip8.h>
+#include <Display.h>
+//#include <Chip8.h>
 
 using namespace Graphics;
 
@@ -32,17 +32,17 @@ void Display::quitGraphics() {
     
 }
 
-void Display::createPointsVector(Chip8 chip) {
+void Display::createPointsVector() {
 
     for(int height = 0; height < 32, height++) {
         for(int width = 0; width < 64; width++) {
-            if(chip.display[height][width] == 1) {
+            if(displayState[height][width] == 1) {
                 SDL_Point point = {width, height};
                 pointsVector.push_back(point);
             }
         }
     }
-    
+
 }
 
 void Display::drawVector(vector vector) {
