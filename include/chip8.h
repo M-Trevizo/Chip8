@@ -1,8 +1,10 @@
 #include <array>
 #include <stdint.h>
 #include <stack>
+#include <Display.h>
 
 using namespace std;
+using namespace Graphics;
 
 namespace CPU {
 
@@ -16,7 +18,7 @@ namespace CPU {
             uint8_t DT = 0;                             // Delay Timer
             uint8_t ST = 0;                             // Sound Timer
             array<uint8_t, 16> varReg = {};             // Varibal Register; VF is flag register
-            int display[32][64] = {};                   // Display grid
+            Graphics::Display display;                  // Display instance
             bool romLoaded = false;                     // Is rom loaded into mem
 
             void loadRom(string path);                  // Load rom into memory

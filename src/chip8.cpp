@@ -2,7 +2,8 @@
 #include <fstream>
 #include <stdint.h>
 #include <array>
-#include "../include/Chip8.h"
+#include <Chip8.h>
+#include <Display.h>
 
 using namespace std;
 using namespace CPU;
@@ -136,7 +137,7 @@ void Chip8::clearScreen() {
     
     for(int i = 0; i < 32; i++) {
         for(int j = 0; j < 64; j++) {
-            display[i][j] = 0;
+            display.displayState[i][j] = 0;
         }
     }
 
@@ -177,9 +178,8 @@ void Chip8::setIndex(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
 // DXYN
 void Chip8::draw(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
 
-    // TODO: Finish writing this function
-    // Create array representing display state
-    // Pass that array to SDL to create a copy with Rectangles
+    // TODO: Find a way to make SDL draw this array;
+   
     uint16_t bytePointer = I;
     uint8_t bytesLeft = nibble3;
     uint8_t YLocation = nibble2 % 32;
@@ -202,4 +202,6 @@ void Chip8::draw(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
         bytesLeft--;
     }
 
+    display.createPointsVector();
+    display.drawVector();
 }
