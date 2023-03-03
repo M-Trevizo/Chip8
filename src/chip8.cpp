@@ -2,6 +2,7 @@
 #include <fstream>
 #include <stdint.h>
 #include <array>
+#include <bitset>
 #include "../include/Chip8.h"
 //#include "../include/Display.h"
 
@@ -22,10 +23,10 @@ void Chip8::loadRom(string path) {
 
     int memIndex = 0x200;
     while(pBuf->sgetc() != EOF) {
-        uint8_t byte;
-        uint8_t highNibble = pBuf->sbumpc();
-        uint8_t lowNibble = pBuf->sbumpc();
-        byte = (highNibble << 4) | lowNibble;
+        //uint16_t instruction;
+        uint8_t byte = pBuf->sbumpc();
+        //uint8_t lowByte = pBuf->sbumpc();
+        //instruction = (highByte << 8) | lowByte;
         mem[memIndex] = byte;
         memIndex++;
     }
@@ -82,15 +83,18 @@ array<uint8_t, 4> Chip8::decode(uint16_t opCode) {
     uint8_t nibble3;
     uint8_t nibble4;
 
-    uint16_t mask1 = 0xF000;
-    uint16_t mask2 = 0x0F00;
-    uint16_t mask3 = 0x00F0;
-    uint16_t mask4 = 0x000F;
+    //uint16_t mask1 = 0xF000;
+    //uint16_t mask2 = 0x0F00;
+    //uint16_t mask3 = 0x00F0;
+    uint16_t mask = 0xF;
 
-    nibble1 = opCode & mask1;
-    nibble2 = opCode & mask2;
-    nibble3 = opCode & mask3;
-    nibble4 = opCode & mask4;
+    nibble4 = opCode & mask;
+    opCode = opCode >> 4;
+    nibble3 = opCode & mask;
+    opCode = opCode >> 4;
+    nibble2 = opCode & mask;
+    opCode = opCode >> 4;
+    nibble1 = opCode & mask;
 
     array<uint8_t, 4> nibbles = {
         nibble1,
@@ -178,30 +182,46 @@ void Chip8::setIndex(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
 // DXYN
 void Chip8::draw(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
 
-    // TODO: Find a way to make SDL draw this array;
+    // TODO: Find out why program hangs here.
    
     uint16_t bytePointer = I;
     uint8_t bytesLeft = nibble3;
-    uint8_t YLocation = nibble2 % 32;
+    uint8_t YLocation = varReg[nibble2] % 32;
 
     while(bytesLeft > 0) {
 
-        uint8_t byteToDraw = mem[bytePointer];
-        uint8_t XLocation = nibble1 % 64;
-        uint8_t mask = 0xF0;
+        bitset<8> bitsToDraw = mem[bytePointer];        // Index 0 of bitset is Rightmost bit
+        uint8_t XLocation = varReg[nibble1] % 64;
+        uint8_t mask = 0x1;
 
+        for(int i = 8; i >= 0; i--) {
+
+            if(display.displayState[YLocation][XLocation] == 1) {
+                display.displayState[YLocation][XLocation] ^= bitsToDraw[i];
+            }
+            else {
+                display.displayState[YLocation][XLocation] = bitsToDraw[i];
+            }
+            
+            XLocation++;
+        }
+        
+        /*
         while(mask > 0) {
             uint8_t bitToEnter = mask & byteToDraw;
             display.displayState[YLocation][XLocation] ^= bitToEnter;
             mask >> 1;
             XLocation++;
         }
-
+        */
         YLocation++;
         bytePointer++;
         bytesLeft--;
     }
 
     display.createPointsVector();
+    for(int i = 0; i < display.pointsVector.size(); i++) {
+        std::cout << display.pointsVector[i].x << ", " << display.pointsVector[i].y << std::endl;
+    }
     display.drawVector();
 }

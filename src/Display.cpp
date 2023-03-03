@@ -55,5 +55,7 @@ void Display::drawVector() {
     SDL_RenderClear(renderer);
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     SDL_RenderDrawPoints(renderer, pointsArray, pointsVector.size());
+    SDL_RenderPresent(renderer);
+    pointsVector.clear();
 
 }

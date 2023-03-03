@@ -33,10 +33,12 @@ int main(int argc, char** argv) {
         return 1;
     }
 
+    chip.display.initGraphics();
+
     while(chip.PC < chip.mem.size()) {
 
         if(SDL_PollEvent(&chip.display.event)) {
-            if(chip.display.event.type = SDL_QUIT) {
+            if(chip.display.event.type == SDL_QUIT) {
                 chip.display.quitGraphics();
                 break;
             }
