@@ -4,7 +4,6 @@
 #include <array>
 #include <bitset>
 #include "../include/Chip8.h"
-//#include "../include/Display.h"
 
 using namespace std;
 using namespace CPU;
@@ -23,12 +22,11 @@ void Chip8::loadRom(string path) {
 
     int memIndex = 0x200;
     while(pBuf->sgetc() != EOF) {
-        //uint16_t instruction;
+
         uint8_t byte = pBuf->sbumpc();
-        //uint8_t lowByte = pBuf->sbumpc();
-        //instruction = (highByte << 8) | lowByte;
         mem[memIndex] = byte;
         memIndex++;
+
     }
 
     stream.close();
@@ -83,9 +81,6 @@ array<uint8_t, 4> Chip8::decode(uint16_t opCode) {
     uint8_t nibble3;
     uint8_t nibble4;
 
-    //uint16_t mask1 = 0xF000;
-    //uint16_t mask2 = 0x0F00;
-    //uint16_t mask3 = 0x00F0;
     uint16_t mask = 0xF;
 
     nibble4 = opCode & mask;
@@ -120,13 +115,45 @@ void Chip8::execute(array<uint8_t, 4> nibbles) {
             switch(nibble4) {
                 case 0x0: clearScreen();
                 break;
+                case 0xE: returnFromSubroutine();
+                break;
             }
         break;
         case 0x1: jump(nibble2, nibble3, nibble4);
         break;
+        case 0x2: callSubroutine(nibble2, nibble3, nibble4);
+        break;
+        case 0x3: skipIfEquals(nibble2, nibble3, nibble4);
+        break;
+        case 0x4: skipIfNotEquals(nibble2, nibble3, nibble4);
+        break;
+        case 0x5: skipXEqualsY(nibble2, nibble3);
+        break;
         case 0x6: setRegister(nibble2, nibble3, nibble4);
         break;
         case 0x7: add(nibble2, nibble3, nibble4);
+        break;
+        case 0x8:
+            switch(nibble4) {
+                case 0x0: setXtoY(nibble2, nibble3);
+                break;
+                case 0x1: setOr(nibble2, nibble3);
+                break;
+                case 0x2: setAnd(nibble2, nibble3);
+                break;
+                case 0x3: setXOR(nibble2, nibble3);
+                break;
+                case 0x4: setAdd(nibble2, nibble3);
+                break;
+                case 0x5: setXSubY(nibble2, nibble3);
+                break;
+                case 0x6: setRShift(nibble2, nibble3);
+                break;
+                case 0x7: setYSubX(nibble2, nibble3);
+                break;
+                case 0xE: setLShift(nibble2, nibble3);
+                break;
+            }
         break;
         case 0xA: setIndex(nibble2, nibble3, nibble4);
         break;
@@ -147,11 +174,60 @@ void Chip8::clearScreen() {
 
 }
 
+// 00EE
+void Chip8::returnFromSubroutine() {
+
+    PC = stack.top();
+    stakc.pop();
+    
+}
+
 // 1NNN
 void Chip8::jump(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
 
     uint16_t newAddress = (nibble1 << 8) | (nibble2 << 4) | nibble3;
     PC = newAddress;
+
+}
+
+// 2NNN
+void Chip8::callSubroutine(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
+
+    uint16_t address = (nibble1 << 8) | (nibble2 << 4) | nibble3;
+    stack.push(PC);
+    PC = address;
+
+}
+
+// 3XNN
+void Chip8::skipIfEquals(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
+
+    uint8_t byte = (nibble2 << 4) | nibble3;
+    if(varReg[nibble1] == byte) {
+        PC += 2;
+    }
+
+}
+
+// 4XNN
+void Chip8::skipIfNotEquals(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
+
+    uint8_t byte = (nibble2 << 4) | nibble3;
+    if(varReg[nibble1] != byte) {
+        PC += 2;
+    }
+
+}
+
+// 5XY0
+void Chip8::skipXEqualsY(uint8_t nibble1, uint8_t nibble2) {
+
+    uint8_t X = varReg[nibble1];
+    uint8_t Y = varReg[nibble2];
+
+    if(X == Y) {
+        PC += 2;
+    }
 
 }
 
@@ -171,6 +247,125 @@ void Chip8::add(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
 
 }
 
+// 8XY0
+void Chip8::setXtoY(uint8_t nibble1, uint8_t nibble2) {
+    
+    uint8_t Y = varReg[nibble2];
+    varReg[nibble1] = Y;
+
+}
+
+// 8XY1
+void Chip8::setOr(uint8_t nibble1, uint8_t nibble2) {
+
+    uint8_t value = varReg[nibble1] | varReg[nibble2];
+    varReg[nibble1] = value;
+
+}
+
+// 8XY2
+void Chip8::setAnd(uint8_t nibble1, uint8_t nibble2) {
+
+    uint8_t value = varReg[nibble1] & varReg[nibble2];
+    varReg[nibble1] = value;
+
+}
+
+// 8XY3
+void Chip8::setXOR(uint8_t nibble1, uint8_t nibble2) {
+
+    uint8_t value = varReg[nibble1] ^ varReg[nibble2];
+    varReg[nibble1] = value;
+
+}
+
+// 8XY4
+void Chip8::setAdd(uint8_t nibble1, uint8_t nibble2) {
+
+    int value = varReg[nibble1] + varReg[nibble2];
+
+    if(value > 0xFF) {
+        uint8_t mask = 0xFF
+        value = value & mask;
+        varReg[0xF] = 1;
+    }
+    else {
+        varReg[0xF] = 0;
+    }
+
+    varReg[nibble1] = value;
+
+}
+
+// 8XY5
+void Chip8::setXSubY(uint8_t nibble1, uint8_t nibble2) {
+    
+    uint8_t X = varReg[nibble1];
+    uint8_t Y = varReg[nibble2];
+    
+    if(X > Y) {
+        varReg[0xF] = 1;
+    }
+    else {
+        varReg[0xF] = 0;
+    }
+
+    uint8_t value = X - Y;
+    varReg[nibble1] = value;
+
+}
+
+// 8XY6
+void Chip8::setRShift(uint8_t nibble1, uint8_t nibble2) {
+
+    uint8_t X = varReg[nibble1];
+    uint8_t mask = 0x1;
+
+    if((X & mask) == 1) {
+        varReg[0xF] = 1;
+    }
+    else {
+        varReg[0xF] = 0;
+    }
+
+    varReg[nibble1] = X / 2;
+
+}
+
+// 8XY7
+void Chip8::setYSubX(uint8_t nibble1, uint8_t nibble2) {
+
+    uint8_t X = varReg[nibble1];
+    uint8_t Y = varReg[nibble2];
+    
+    if(Y > X) {
+        varReg[0xF] = 1;
+    }
+    else {
+        varReg[0xF] = 0;
+    }
+
+    uint8_t value = Y - X;
+    varReg[nibble1] = value;
+
+}
+
+void Chip8::setLShift(uint8_t nibble1, uint8_t nibble2) {
+
+    uint8_t X = varReg[nibble1];
+    uint8_t mask = 0x80;
+
+    if((X & mask) == 1) {
+        varReg[0xF] = 1;
+    }
+    else {
+        varReg[0xF] = 0;
+    }
+
+    varReg[nibble1] = X * 2;
+
+}
+
 // ANNN
 void Chip8::setIndex(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
 
@@ -181,8 +376,6 @@ void Chip8::setIndex(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
 
 // DXYN
 void Chip8::draw(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
-
-    // TODO: Find out why program hangs here.
    
     uint16_t bytePointer = I;
     uint8_t bytesLeft = nibble3;
@@ -206,17 +399,10 @@ void Chip8::draw(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
             XLocation++;
         }
         
-        /*
-        while(mask > 0) {
-            uint8_t bitToEnter = mask & byteToDraw;
-            display.displayState[YLocation][XLocation] ^= bitToEnter;
-            mask >> 1;
-            XLocation++;
-        }
-        */
         YLocation++;
         bytePointer++;
         bytesLeft--;
+
     }
 
     display.createPointsVector();
