@@ -155,7 +155,13 @@ void Chip8::execute(array<uint8_t, 4> nibbles) {
                 break;
             }
         break;
+        case 0x9: skipXNotEqualsY(nibble2, nibble3);
+        break;
         case 0xA: setIndex(nibble2, nibble3, nibble4);
+        break;
+        case 0xB: jumpOffset(nibble2, nibble3, nibble4);
+        break;
+        case 0xC: getRandom(nibble2, nibble3, nibble4);
         break;
         case 0xD: draw(nibble2, nibble3, nibble4);
         break;
@@ -178,7 +184,7 @@ void Chip8::clearScreen() {
 void Chip8::returnFromSubroutine() {
 
     PC = stack.top();
-    stakc.pop();
+    stack.pop();
     
 }
 
@@ -285,7 +291,7 @@ void Chip8::setAdd(uint8_t nibble1, uint8_t nibble2) {
     int value = varReg[nibble1] + varReg[nibble2];
 
     if(value > 0xFF) {
-        uint8_t mask = 0xFF
+        uint8_t mask = 0xFF;
         value = value & mask;
         varReg[0xF] = 1;
     }
@@ -350,6 +356,7 @@ void Chip8::setYSubX(uint8_t nibble1, uint8_t nibble2) {
 
 }
 
+// 8XYE
 void Chip8::setLShift(uint8_t nibble1, uint8_t nibble2) {
 
     uint8_t X = varReg[nibble1];
@@ -366,11 +373,43 @@ void Chip8::setLShift(uint8_t nibble1, uint8_t nibble2) {
 
 }
 
+// 9XY0
+void Chip8::skipXNotEqualsY(uint8_t nibble1, uint8_t nibble2) {
+
+    uint8_t X = varReg[nibble1];
+    uint8_t Y = varReg[nibble2];
+
+    if(X != Y) {
+        PC += 2;
+    }
+
+}
+
 // ANNN
 void Chip8::setIndex(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
 
     uint16_t address = (nibble1 << 8) | (nibble2 << 4) | nibble3;
     I = address;
+
+}
+
+// BNNN
+void Chip8::jumpOffset(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
+
+    uint8_t offset = varReg[0x0];
+    uint16_t address = (nibble1 << 8) | (nibble2 << 4) | nibble3;
+    uint16_t addressToJump = address + offset;
+    PC = addressToJump;
+
+}
+
+// CNNN
+void Chip8::getRandom(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
+
+    uint8_t byte = (nibble2 << 4) | nibble3;
+    int randomNum = rand() % 256;
+    uint8_t randomByte = randomNum & byte;
+    varReg[nibble1] = randomByte;
 
 }
 
@@ -406,8 +445,5 @@ void Chip8::draw(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
     }
 
     display.createPointsVector();
-    for(int i = 0; i < display.pointsVector.size(); i++) {
-        std::cout << display.pointsVector[i].x << ", " << display.pointsVector[i].y << std::endl;
-    }
     display.drawVector();
 }

@@ -45,7 +45,10 @@ namespace CPU {
             void setRShift(uint8_t nibble1, uint8_t nibble2);                               // 8XY6
             void setYSubX(uint8_t nibble1, uint8_t nibble2);                                // 8XY7
             void setLShift(uint8_t nibble1, uint8_t nibble2);                               // 8XYE
+            void skipXNotEqualsY(uint8_t nibble1, uint8_t nibble2);                         // 9XY0
             void setIndex(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3);               // ANNN
+            void jumpOffset(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3);             // BNNN
+            void getRandom(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3);              // CNNN
             void draw(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3);                   // DXYN
     };
 }
