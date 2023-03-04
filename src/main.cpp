@@ -3,7 +3,6 @@
 #include <chrono>
 #include <thread>
 #include "../include/Chip8.h"
-//#include "../include/Display.h"
 
 using namespace std;
 using namespace CPU;
