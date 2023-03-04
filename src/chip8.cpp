@@ -11,7 +11,7 @@ using namespace CPU;
 void Chip8::loadRom(string path) {
 
     if(path.find(".ch8") == string::npos) {
-        cout << "File extension must be .ch8" << endl
+        cout << "File extension must be .ch8" << endl;
         return;
     }
 
@@ -451,4 +451,53 @@ void Chip8::draw(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
 
     display.createPointsVector();
     display.drawVector();
+}
+
+// EX9E
+void Chip8::skipIfKeyPress(uint8_t nibble1) {
+
+    //TODO: implement key press listener
+
+}
+
+// EXA1
+void Chip8::skipIfNoKeyPress(uint8_t nibble1) {
+
+    //TODO: implement key press listener
+
+}
+
+// FX07
+void Chip8::loadDelayTimer(uint8_t nibble1) {
+
+    varReg[nibble1] = DT;
+
+}
+
+// FX0A
+void Chip8::getKeyPress(uint8_t nibble1) {
+
+    //TODO: implement this function
+
+}
+
+// FX15
+void Chip8::setDelayTimer(uint8_t nibble1){
+
+    DT = varReg[nibble1];
+
+}
+
+// FX18
+void Chip8::setSoundTimer(uint8_t nibble1) {
+
+    ST = varReg[nibble1];
+
+}
+
+// FX1E
+void Chip8::addI(uint8_t nibble1) {
+
+    I += varReg[nibble1];
+
 }

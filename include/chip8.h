@@ -50,5 +50,12 @@ namespace CPU {
             void jumpOffset(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3);             // BNNN
             void getRandom(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3);              // CNNN
             void draw(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3);                   // DXYN
+            void skipIfKeyPress(uint8_t nibble1);                                           // EX9E
+            void skipIfNoKeyPress(uint8_t nibble1);                                         // EXA1
+            void loadDelayTimer(uint8_t nibble1);                                           // FX07
+            void getKeyPress(uint8_t nibble1);                                              // FX0A
+            void setDelayTimer(uint8_t nibble1);                                            // FX15
+            void setSoundTimer(uint8_t nibble1);                                            // FX18
+            void addI(uint8_t nibble1);                                                     // FX1E
     };
 }
