@@ -424,6 +424,7 @@ void Chip8::draw(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
     uint16_t bytePointer = I;
     uint8_t bytesLeft = nibble3;
     uint8_t YLocation = varReg[nibble2] % 32;
+    varReg[0xF] = 0;
 
     while(bytesLeft > 0) {
 
@@ -431,10 +432,11 @@ void Chip8::draw(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
         uint8_t XLocation = varReg[nibble1] % 64;
         uint8_t mask = 0x1;
 
-        for(int i = 8; i >= 0; i--) {
+        for(int i = 7; i >= 0; i--) {
 
             if(display.displayState[YLocation][XLocation] == 1) {
                 display.displayState[YLocation][XLocation] ^= bitsToDraw[i];
+                varReg[0xF] = 1;
             }
             else {
                 display.displayState[YLocation][XLocation] = bitsToDraw[i];
