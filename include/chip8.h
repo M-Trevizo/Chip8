@@ -1,6 +1,7 @@
 #include <array>
 #include <stdint.h>
 #include <stack>
+#include <map>
 #include "./Display.h"
 
 using namespace std;
@@ -20,7 +21,24 @@ namespace CPU {
             array<uint8_t, 16> varReg = {};             // Varibal Register; VF is flag register
             Graphics::Display display;                  // Display instance
             bool romLoaded = false;                     // Is rom loaded into mem
-
+            map<int, char> keyMap {                     // Keymap for hex value to key
+                {0x1, '1'},
+                {0x2, '2'},
+                {0x3, '3'},
+                {0xC, '4'},
+                {0x4, 'Q'},
+                {0x5, 'W'},
+                {0x6, 'E'},
+                {0xD, 'R'},
+                {0x7, 'A'},
+                {0x8, 'S'},
+                {0x9, 'D'},
+                {0xE, 'F'},
+                {0xA, 'Z'},
+                {0x0, 'X'},
+                {0xB, 'C'},
+                {0xF, 'V'}
+            };
             void loadRom(string path);                  // Load rom into memory
             void loadFont();                            // Load font into memory
             uint16_t fetch();                           // Fetch Opcode
@@ -57,5 +75,10 @@ namespace CPU {
             void setDelayTimer(uint8_t nibble1);                                            // FX15
             void setSoundTimer(uint8_t nibble1);                                            // FX18
             void addI(uint8_t nibble1);                                                     // FX1E
+            void loadSprite(uint8_t nibble1);                                               // FX29
+            void storeBCD(uint8_t nibble1);                                                 // FX33
+            void storeRegisters(uint8_t nibble1);                                           // FX55
+            void readRegisters(uint8_t nibble1);                                            // FX65
+
     };
 }

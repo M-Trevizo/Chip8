@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <array>
 #include <bitset>
+#include <windows.h>
 #include "../include/Chip8.h"
 
 using namespace std;
@@ -133,7 +134,7 @@ void Chip8::execute(array<uint8_t, 4> nibbles) {
         break;
         case 0x7: add(nibble2, nibble3, nibble4);
         break;
-        case 0x8:
+        case 0x8: {
             switch(nibble4) {
                 case 0x0: setXtoY(nibble2, nibble3);
                 break;
@@ -154,6 +155,7 @@ void Chip8::execute(array<uint8_t, 4> nibbles) {
                 case 0xE: setLShift(nibble2, nibble3);
                 break;
             }
+        }
         break;
         case 0x9: skipXNotEqualsY(nibble2, nibble3);
         break;
@@ -164,6 +166,39 @@ void Chip8::execute(array<uint8_t, 4> nibbles) {
         case 0xC: getRandom(nibble2, nibble3, nibble4);
         break;
         case 0xD: draw(nibble2, nibble3, nibble4);
+        break;
+        case 0xE: {
+            uint8_t byte = (nibble3 << 4) | nibble4;
+            switch(byte) {
+                case 0x9E: skipIfKeyPress(nibble2);
+                break;
+                case 0xA1: skipIfNoKeyPress(nibble2);
+                break;
+            }
+        }
+        break;
+        case 0xF: {
+            uint8_t byte = (nibble3 << 4) | nibble4;
+            switch(byte) {
+                case 0x07: loadDelayTimer(nibble2);
+                break;
+                case 0x0A: ; // TODO: Dont forget to write this instruction
+                break;
+                case 0x15: setDelayTimer(nibble2);
+                break;
+                case 0x18: setSoundTimer(nibble2);
+                break;
+                case 0x1E: addI(nibble2);
+                break;
+                case 0x29: loadSprite(nibble2);
+                break;
+                case 0x33: storeBCD(nibble2);
+                break;
+                case 0x55: storeRegisters(nibble2);
+                break;
+                case 0x65: readRegisters(nibble2);
+            }
+        }
         break;
     }
 
@@ -453,14 +488,22 @@ void Chip8::draw(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
 // EX9E
 void Chip8::skipIfKeyPress(uint8_t nibble1) {
 
-    //TODO: implement key press listener
+    char key = keyMap[nibble1];
+    bool isDown = GetKeyState(key) & 0x8000;
+    if(isDown) {
+        PC += 2;
+    }
 
 }
 
 // EXA1
 void Chip8::skipIfNoKeyPress(uint8_t nibble1) {
 
-    //TODO: implement key press listener
+    char key = keyMap[nibble1];
+    bool isDown = GetKeyState(key) & 0x8000;
+    if(!isDown) {
+        PC += 2;
+    }
 
 }
 
@@ -496,5 +539,54 @@ void Chip8::setSoundTimer(uint8_t nibble1) {
 void Chip8::addI(uint8_t nibble1) {
 
     I += varReg[nibble1];
+
+}
+
+// FX29
+void Chip8::loadSprite(uint8_t nibble1) {
+
+    uint8_t sprite = varReg[nibble1];
+    uint16_t startingLocation = 0x050;
+    uint16_t spriteLocation = startingLocation + (sprite * 5);  // sprite value * 5 is calculated offset
+    I = spriteLocation;
+
+}
+
+// FX33
+void Chip8::storeBCD(uint8_t nibble1) {
+
+    int value = varReg[nibble1];
+    int hundreds = value / 100;
+    int tens = (value % 100) / 10;
+    int ones = value % 10;
+
+    uint16_t copyOfI = I;
+    mem[copyOfI] = hundreds;
+    copyOfI++;
+    mem[copyOfI] = tens;
+    copyOfI++;
+    mem[copyOfI] = ones;
+
+}
+
+// FX55
+void Chip8::storeRegisters(uint8_t nibble1) {
+
+    uint16_t copyOfI = I;
+    for(int i = 0; i <= nibble1; i++) {
+        mem[copyOfI] = varReg[i];
+        copyOfI++;
+    }
+
+}
+
+// FX65
+void Chip8::readRegisters(uint8_t nibble1) {
+
+    uint16_t copyOfI = I;
+    for(int i = 0; i <= nibble1; i++) {
+        varReg[i] = mem[copyOfI];
+        copyOfI++;
+    }
 
 }
