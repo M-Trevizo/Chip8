@@ -10,11 +10,6 @@ using namespace CPU;
 
 void Chip8::loadRom(string path) {
 
-    if(path.find(".ch8") == string::npos) {
-        cout << "File extension must be .ch8" << endl;
-        return;
-    }
-
     ifstream stream;
     stream.open(path, ios::binary);
 
