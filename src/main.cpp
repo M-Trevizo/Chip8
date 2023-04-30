@@ -33,20 +33,23 @@ int main(int argc, char** argv) {
     }
 
     chip.display.initGraphics();
+    chip.isRunning = true;
 
-    while(chip.PC < chip.mem.size()) {
+    // TODO: Get Event loop working for keyboard
+    while(chip.isRunning) {
 
         if(SDL_PollEvent(&chip.display.event)) {
             if(chip.display.event.type == SDL_QUIT) {
                 chip.display.quitGraphics();
-                break;
+                chip.isRunning = false;
+                //break;
             }
         }
 
         uint16_t opCode = chip.fetch();
         array<uint8_t, 4> nibbles = chip.decode(opCode);
         chip.execute(nibbles);
-        this_thread::sleep_for(chrono::microseconds(1400));
+        this_thread::sleep_for(chrono::microseconds(1428));     // ~700 instructions per second
 
     }
 

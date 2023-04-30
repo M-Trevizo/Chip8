@@ -21,6 +21,7 @@ namespace CPU {
             array<uint8_t, 16> varReg = {};             // Varibal Register; VF is flag register
             Graphics::Display display;                  // Display instance
             bool romLoaded = false;                     // Is rom loaded into mem
+            bool isRunning = false;                     // Boolean for game loop
             map<int, char> keyMap {                     // Keymap for hex value to key
                 {0x1, '1'},
                 {0x2, '2'},
