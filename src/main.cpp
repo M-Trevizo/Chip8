@@ -38,12 +38,15 @@ int main(int argc, char** argv) {
     // TODO: Get Event loop working for keyboard
     while(chip.isRunning) {
 
-        if(SDL_PollEvent(&chip.display.event)) {
-            if(chip.display.event.type == SDL_QUIT) {
+        while(SDL_PollEvent(&chip.display.event) != 0) {
+
+            SDL_Event event = chip.display.event;
+
+            if(event.type == SDL_QUIT) {
                 chip.display.quitGraphics();
                 chip.isRunning = false;
-                //break;
             }
+            
         }
 
         uint16_t opCode = chip.fetch();
