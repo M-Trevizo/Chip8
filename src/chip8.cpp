@@ -496,40 +496,20 @@ void Chip8::draw(uint8_t nibble1, uint8_t nibble2, uint8_t nibble3) {
 
 // EX9E
 void Chip8::skipIfKeyPress(uint8_t nibble1) {
-    // TODO: Change this to use SDL2
 
-    /*
-    char key = keyMap[nibble1];
-    bool isDown = GetKeyState(key) & 0x8000;
-    if(isDown) {
-        PC += 2;
-    }
-    */
-
-    int scanCode = keyMap[nibble1];
+    int scanCode = keyMap[varReg[nibble1]];
     if(currentKeyStates[scanCode]) {
         PC += 2;
-        printf("Key Pressed, nibbled: %i", scanCode);
     }
 
 }
 
 // EXA1
 void Chip8::skipIfNoKeyPress(uint8_t nibble1) {
-    // TODO: Change this to use SDL2
 
-    /*
-    char key = keyMap[nibble1];
-    bool isDown = GetKeyState(key) & 0x8000;
-    if(!isDown) {
-        PC += 2;
-    }
-    */
-
-    SDL_Scancode scanCode = keyMap[nibble1];
+    SDL_Scancode scanCode = keyMap[varReg[nibble1]];
     if(!currentKeyStates[scanCode]) {
         PC += 2;
-        printf("nibble: %i, not pressed\n", scanCode);
     }
 
 }
@@ -544,13 +524,12 @@ void Chip8::loadDelayTimer(uint8_t nibble1) {
 // FX0A
 void Chip8::getKeyPress(uint8_t nibble1) {
 
-    // I think this should work?
     bool waiting = true;
     while(waiting) {
+        printf("Waiting for KeyPress");
         if(currentKeyStates[SDL_SCANCODE_1]) {
             varReg[nibble1] = 0x1;
             waiting = false;
-            cout << "Key 1 Pressed" << endl;
         }
         else if(currentKeyStates[SDL_SCANCODE_2]) {
             varReg[nibble1] = 0x2;
@@ -603,7 +582,6 @@ void Chip8::getKeyPress(uint8_t nibble1) {
         else if(currentKeyStates[SDL_SCANCODE_X]) {
             varReg[nibble1] = 0x0;
             waiting = false;
-            cout << "Key X Pressed" << endl;
         }
         else if(currentKeyStates[SDL_SCANCODE_C]) {
             varReg[nibble1] = 0xB;
