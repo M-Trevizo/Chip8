@@ -7,3 +7,6 @@ This is my first project with C++ as well as my first emulator. To use the emula
 - ~~Get Delay Timer working~~
 - ~~Get Sound Timer working~~
 - ~~Add Keyboard support~~
+
+## Known Bugs:
+- Emulator crashes when sprite tries to leave screen area, or is near edge of screen.
