@@ -526,7 +526,6 @@ void Chip8::getKeyPress(uint8_t nibble1) {
 
     bool waiting = true;
     while(waiting) {
-        printf("Waiting for KeyPress");
         if(currentKeyStates[SDL_SCANCODE_1]) {
             varReg[nibble1] = 0x1;
             waiting = false;
